@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BlckBx — Discovery Call</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --white: #FFFFFF;
+    --base-black: #1D1C1B;
+    --black: #000000;
+    --cta: #E7C51C;
+    --cta-hover: #d4b418;
+    --sand-100: #F7F3F0;
+    --sand-200: #F1F1F0;
+    --sand-300: #E8E5E0;
+    --sand-400: #D0D8D0;
+    --sand-500: #CDC9BE;
+    --sand-600: #C0B9AE;
+    --sand-700: #AAA698;
+    --grey-100: #F0F0F0;
+    --grey-200: #C0C0C0;
+    --grey-300: #999797;
+    --grey-400: #686968;
+    --grey-500: #424242;
+    --grey-600: #2E2E2E;
+    --grey-700: #121212;
+    --green: #1EA868;
+    --error: #E33737;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --shadow-sm: 0 1px 3px rgba(29,28,27,0.06);
+    --shadow-md: 0 4px 12px rgba(29,28,27,0.08);
+    --shadow-lg: 0 8px 30px rgba(29,28,27,0.1);
+    --transition: 180ms ease;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', -apple-system, sans-serif;
+    background: linear-gradient(180deg, var(--sand-100) 0%, var(--sand-300) 100%);
+    min-height: 100vh;
+    color: var(--base-black);
+    -webkit-font-smoothing: antialiased;
+  }
+  .page-wrapper { max-width: 720px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* Header */
+  .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .logo { display: flex; align-items: center; }
+  .logo svg { height: 28px; width: auto; }
+  .deal-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--white); border: 1px solid var(--sand-300);
+    border-radius: 20px; padding: 6px 14px;
+    font-size: 12px; font-weight: 500; color: var(--grey-400);
+  }
+  .deal-badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
+  .page-subtitle { font-size: 14px; color: var(--grey-400); margin-bottom: 36px; }
+
+  /* Section Cards */
+  .section {
+    background: var(--white); border: 1px solid var(--sand-300);
+    border-radius: var(--radius-lg); padding: 28px 28px 24px;
+    margin-bottom: 20px; box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition);
+  }
+  .section:hover { box-shadow: var(--shadow-md); }
+  .section-label {
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 1.2px; color: var(--grey-300); margin-bottom: 20px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--sand-300); }
+
+  /* Fields */
+  .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .field-grid .full { grid-column: 1 / -1; }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label { font-size: 12px; font-weight: 600; color: var(--grey-500); letter-spacing: 0.2px; }
+  .field label .optional { font-weight: 400; color: var(--grey-300); font-size: 11px; }
+
+  input[type="text"], input[type="email"], input[type="tel"], textarea {
+    width: 100%; padding: 10px 14px; border: 1.5px solid var(--sand-300);
+    border-radius: var(--radius-sm); font-family: inherit; font-size: 14px;
+    color: var(--base-black); background: var(--sand-100);
+    transition: border-color var(--transition), background var(--transition), box-shadow var(--transition);
+    outline: none;
+  }
+  input:focus, textarea:focus {
+    border-color: var(--base-black); background: var(--white);
+    box-shadow: 0 0 0 3px rgba(29,28,27,0.06);
+  }
+  input::placeholder, textarea::placeholder { color: var(--grey-300); }
+  textarea { resize: vertical; min-height: 100px; }
+
+  /* Custom Select */
+  .custom-select { position: relative; }
+  .select-trigger {
+    width: 100%; padding: 10px 14px; padding-right: 36px;
+    border: 1.5px solid var(--sand-300); border-radius: var(--radius-sm);
+    font-family: inherit; font-size: 14px; color: var(--base-black);
+    background: var(--sand-100); cursor: pointer;
+    transition: border-color var(--transition), background var(--transition);
+    text-align: left; appearance: none; position: relative;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .select-trigger.placeholder { color: var(--grey-300); }
+  .select-trigger::after {
+    content: ''; position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+    width: 0; height: 0; border-left: 4px solid transparent;
+    border-right: 4px solid transparent; border-top: 5px solid var(--grey-400);
+    pointer-events: none;
+  }
+  .select-trigger:hover, .select-trigger:focus { border-color: var(--base-black); background: var(--white); outline: none; }
+  .select-dropdown {
+    display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+    background: var(--white); border: 1.5px solid var(--sand-300);
+    border-radius: var(--radius-sm); box-shadow: var(--shadow-lg);
+    z-index: 100; max-height: 240px; overflow-y: auto; padding: 4px;
+  }
+  .select-dropdown.open { display: block; }
+  .select-option {
+    padding: 9px 12px; font-size: 13px; cursor: pointer;
+    border-radius: 4px; transition: background var(--transition); color: var(--base-black);
+  }
+  .select-option:hover { background: var(--sand-100); }
+  .select-option.selected { background: var(--sand-200); font-weight: 600; }
+
+  /* Multi-Select */
+  .multi-select-wrap { position: relative; }
+  .tag-area {
+    display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 12px;
+    border: 1.5px solid var(--sand-300); border-radius: var(--radius-sm);
+    background: var(--sand-100); min-height: 42px; cursor: pointer;
+    transition: border-color var(--transition), background var(--transition);
+    align-items: center;
+  }
+  .tag-area:hover { border-color: var(--base-black); background: var(--white); }
+  .tag-area.active { border-color: var(--base-black); background: var(--white); box-shadow: 0 0 0 3px rgba(29,28,27,0.06); }
+  .tag-area .placeholder-text { color: var(--grey-300); font-size: 14px; }
+  .tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: var(--base-black); color: var(--white);
+    padding: 3px 8px 3px 10px; border-radius: 20px;
+    font-size: 12px; font-weight: 500; line-height: 1.5; white-space: nowrap;
+  }
+  .tag .remove-tag {
+    cursor: pointer; opacity: 0.6; font-size: 14px; line-height: 1;
+    transition: opacity var(--transition); display: flex; align-items: center;
+  }
+  .tag .remove-tag:hover { opacity: 1; }
+  .multi-dropdown {
+    display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+    background: var(--white); border: 1.5px solid var(--sand-300);
+    border-radius: var(--radius-sm); box-shadow: var(--shadow-lg);
+    z-index: 100; max-height: 240px; overflow-y: auto; padding: 4px;
+  }
+  .multi-dropdown.open { display: block; }
+  .multi-option {
+    padding: 9px 12px; font-size: 13px; cursor: pointer; border-radius: 4px;
+    transition: background var(--transition); display: flex; align-items: center;
+    gap: 8px; color: var(--base-black);
+  }
+  .multi-option:hover { background: var(--sand-100); }
+  .multi-option .check-box {
+    width: 16px; height: 16px; border: 1.5px solid var(--sand-600);
+    border-radius: 3px; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: all var(--transition);
+  }
+  .multi-option.selected .check-box { background: var(--base-black); border-color: var(--base-black); }
+  .multi-option.selected .check-box::after { content: '✓'; color: var(--white); font-size: 10px; font-weight: 700; }
+
+  /* Conditional */
+  .conditional { display: none; margin-top: 12px; }
+  .conditional.visible { display: block; }
+
+  /* Kids Age Section */
+  .kids-age-section { display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--sand-300); }
+  .kids-age-section.visible { display: block; }
+  .age-entry-row { display: flex; align-items: flex-end; gap: 10px; margin-top: 10px; }
+  .age-entry-row .field { flex: 1; }
+  .age-entry-row .btn-icon {
+    width: 38px; height: 38px; border: 1.5px solid var(--sand-300);
+    border-radius: var(--radius-sm); background: var(--sand-100);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 18px; color: var(--grey-400); transition: all var(--transition); flex-shrink: 0;
+  }
+  .age-entry-row .btn-icon:hover { background: var(--white); border-color: var(--base-black); color: var(--base-black); }
+  .age-entry-row .btn-icon.remove { color: var(--error); border-color: transparent; background: transparent; }
+  .age-entry-row .btn-icon.remove:hover { background: rgba(227,55,55,0.06); }
+  .add-child-btn {
+    display: inline-flex; align-items: center; gap: 6px; margin-top: 12px;
+    padding: 6px 0; font-size: 13px; font-weight: 500; color: var(--grey-400);
+    background: none; border: none; cursor: pointer; font-family: inherit;
+    transition: color var(--transition);
+  }
+  .add-child-btn:hover { color: var(--base-black); }
+
+  /* Pill Groups */
+  .pill-group { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill {
+    padding: 8px 16px; border: 1.5px solid var(--sand-300); border-radius: 24px;
+    font-size: 13px; font-weight: 500; color: var(--grey-500); background: var(--sand-100);
+    cursor: pointer; transition: all var(--transition); user-select: none;
+  }
+  .pill:hover { border-color: var(--grey-400); background: var(--white); }
+  .pill.active { background: var(--base-black); color: var(--white); border-color: var(--base-black); }
+
+  /* Toggle */
+  .toggle-row { display: flex; align-items: center; gap: 12px; }
+  .toggle {
+    position: relative; width: 44px; height: 24px; background: var(--sand-300);
+    border-radius: 12px; cursor: pointer; transition: background var(--transition); flex-shrink: 0;
+  }
+  .toggle.on { background: var(--green); }
+  .toggle .thumb {
+    position: absolute; top: 2px; left: 2px; width: 20px; height: 20px;
+    border-radius: 50%; background: var(--white); box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    transition: transform var(--transition);
+  }
+  .toggle.on .thumb { transform: translateX(20px); }
+  .toggle-label { font-size: 14px; font-weight: 500; color: var(--grey-500); }
+
+  /* Submit */
+  .submit-area { display: flex; align-items: center; gap: 16px; margin-top: 32px; }
+  .btn-submit {
+    padding: 14px 40px; background: var(--cta); color: var(--base-black);
+    border: none; border-radius: var(--radius-sm); font-family: inherit;
+    font-size: 15px; font-weight: 700; cursor: pointer;
+    transition: all var(--transition); letter-spacing: 0.2px;
+  }
+  .btn-submit:hover { background: var(--cta-hover); box-shadow: var(--shadow-md); transform: translateY(-1px); }
+  .btn-submit:active { transform: translateY(0); }
+  .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .submit-status { font-size: 13px; color: var(--grey-400); }
+  .submit-status.success { color: var(--green); font-weight: 600; }
+  .submit-status.error { color: var(--error); font-weight: 600; }
+
+  /* Loading */
+  .loading-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(247,243,240,0.85);
+    z-index: 999; align-items: center; justify-content: center; flex-direction: column; gap: 16px;
+  }
+  .loading-overlay.visible { display: flex; }
+  .spinner {
+    width: 32px; height: 32px; border: 3px solid var(--sand-300);
+    border-top-color: var(--base-black); border-radius: 50%; animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-size: 14px; color: var(--grey-400); font-weight: 500; }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .page-wrapper { padding: 24px 16px 60px; }
+    .section { padding: 20px 18px 18px; }
+    .field-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Scrollbar */
+  .select-dropdown::-webkit-scrollbar, .multi-dropdown::-webkit-scrollbar { width: 6px; }
+  .select-dropdown::-webkit-scrollbar-track, .multi-dropdown::-webkit-scrollbar-track { background: transparent; }
+  .select-dropdown::-webkit-scrollbar-thumb, .multi-dropdown::-webkit-scrollbar-thumb { background: var(--sand-500); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div class="loading-text">Loading deal data…</div>
+</div>
+
+<div class="page-wrapper">
+  <div class="header">
+    <div class="logo">
+      <img src="/Users/josh.seelan/Downloads/BlckBx PNG.png" alt="BlckBx" style="height: 28px; width: auto;">
+    </div>
+    <div class="deal-badge">
+      <span class="dot"></span>
+      <span id="dealIdDisplay">No deal linked</span>
+    </div>
+  </div>
+  <p class="page-subtitle">Discovery call — fill this out during the call, then submit to update Brevo.</p>
+
+  <form id="discoveryForm" autocomplete="off">
+
+    <!-- CONTACT INFO -->
+    <div class="section">
+      <div class="section-label">Contact Information</div>
+      <div class="field-grid">
+        <div class="field">
+          <label>First Name</label>
+          <input type="text" name="firstName" placeholder="e.g. Sarah">
+        </div>
+        <div class="field">
+          <label>Last Name</label>
+          <input type="text" name="lastName" placeholder="e.g. Mitchell">
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="email" name="email" placeholder="sarah@company.com">
+        </div>
+        <div class="field">
+          <label>Preferred Email <span class="optional">(if different)</span></label>
+          <input type="email" name="preferredEmail" placeholder="sarah.personal@gmail.com">
+        </div>
+        <div class="field">
+          <label>Phone Number</label>
+          <input type="tel" name="phone" placeholder="+44 7700 900000">
+        </div>
+        <div class="field">
+          <label>Company</label>
+          <input type="text" name="company" placeholder="Company name">
+        </div>
+        <div class="field full">
+          <label>Job Title</label>
+          <input type="text" name="jobTitle" placeholder="e.g. Head of Operations">
+        </div>
+      </div>
+    </div>
+
+    <!-- ATTRIBUTION -->
+    <div class="section">
+      <div class="section-label">Attribution</div>
+      <div class="field-grid">
+        <div class="field full">
+          <label>How did you find us?</label>
+          <div class="custom-select" data-name="attribution">
+            <button type="button" class="select-trigger placeholder">Select source…</button>
+            <div class="select-dropdown">
+              <div class="select-option" data-value="Event">Event</div>
+              <div class="select-option" data-value="Google Search">Google Search</div>
+              <div class="select-option" data-value="Google Sponsored Search Result">Google Sponsored Search Result</div>
+              <div class="select-option" data-value="Instagram">Instagram</div>
+              <div class="select-option" data-value="LinkedIn">LinkedIn</div>
+              <div class="select-option" data-value="Microsoft/Yahoo/Bing">Microsoft / Yahoo / Bing</div>
+              <div class="select-option" data-value="Newsletter">Newsletter</div>
+              <div class="select-option" data-value="Physical Advertisement">Physical Advertisement</div>
+              <div class="select-option" data-value="Podcast">Podcast</div>
+              <div class="select-option" data-value="PR - articles, FT etc.">PR — articles, FT etc.</div>
+              <div class="select-option" data-value="Referral - Recommendation from a friend">Referral — Recommendation from a friend</div>
+              <div class="select-option" data-value="Sales Outreach">Sales Outreach — You emailed me</div>
+              <div class="select-option" data-value="Webinar">Webinar</div>
+            </div>
+          </div>
+        </div>
+        <div class="field full conditional" id="referralField">
+          <label>Who referred them?</label>
+          <input type="text" name="referralName" placeholder="Enter referrer's name">
+        </div>
+        <div class="field full">
+          <label>Keywords <span class="optional">(how they'd describe what they searched)</span></label>
+          <input type="text" name="keywords" placeholder="e.g. family PA, life admin help">
+        </div>
+      </div>
+    </div>
+
+    <!-- SUPPORT NEEDS -->
+    <div class="section">
+      <div class="section-label">Support Needs</div>
+      <div class="field-grid">
+        <div class="field full">
+          <label>What type of support are you looking for?</label>
+          <div class="multi-select-wrap" data-name="supportType">
+            <div class="tag-area"><span class="placeholder-text">Select support types…</span></div>
+            <div class="multi-dropdown">
+              <div class="multi-option" data-value="Aging Parents"><span class="check-box"></span>Aging Parents</div>
+              <div class="multi-option" data-value="Birthday Reminders/Core Dates etc"><span class="check-box"></span>Birthday Reminders / Core Dates</div>
+              <div class="multi-option" data-value="Experiences/Activities"><span class="check-box"></span>Experiences / Activities</div>
+              <div class="multi-option" data-value="Gifts"><span class="check-box"></span>Gifts</div>
+              <div class="multi-option" data-value="Health/Appointments"><span class="check-box"></span>Health / Appointments</div>
+              <div class="multi-option" data-value="Holidays/Travel"><span class="check-box"></span>Holidays / Travel</div>
+              <div class="multi-option" data-value="Household Logistics"><span class="check-box"></span>Household Logistics</div>
+              <div class="multi-option" data-value="Kids - Childcare/School Admin"><span class="check-box"></span>Kids — Childcare / School Admin</div>
+              <div class="multi-option" data-value="Lifestyle Optimisation"><span class="check-box"></span>Lifestyle Optimisation</div>
+              <div class="multi-option" data-value="Paperwork/Organisation"><span class="check-box"></span>Paperwork / Organisation</div>
+              <div class="multi-option" data-value="Party/Events Coordination"><span class="check-box"></span>Party / Events Coordination</div>
+              <div class="multi-option" data-value="Restaurant Bookings"><span class="check-box"></span>Restaurant Bookings</div>
+            </div>
+          </div>
+        </div>
+        <div class="field full">
+          <label>What triggered the search for PA support?</label>
+          <div class="custom-select" data-name="coreLifeTrigger">
+            <button type="button" class="select-trigger placeholder">Select trigger…</button>
+            <div class="select-dropdown">
+              <div class="select-option" data-value="ADHD/Autism Support">ADHD / Autism Support</div>
+              <div class="select-option" data-value="Career Promotion">Career Promotion</div>
+              <div class="select-option" data-value="Company Benefit">Company Benefit</div>
+              <div class="select-option" data-value="General Burnout">General Burnout</div>
+              <div class="select-option" data-value="Kids Leaving School">Kids Leaving School</div>
+              <div class="select-option" data-value="Kids Starting School">Kids Starting School</div>
+              <div class="select-option" data-value="Missed Birthday/Date">Missed Birthday / Date</div>
+              <div class="select-option" data-value="Missed Fine/Payment Deadline">Missed Fine / Payment Deadline</div>
+              <div class="select-option" data-value="New Baby">New Baby</div>
+              <div class="select-option" data-value="Overpaid On Subscription">Overpaid On Subscription</div>
+              <div class="select-option" data-value="Research Time">Research Time — finding childcare, cleaners, etc.</div>
+              <div class="select-option" data-value="Upcoming Event/Project">Upcoming Event / Project</div>
+            </div>
+          </div>
+        </div>
+        <div class="field full">
+          <label>In their own words, why now? <span class="optional">(optional)</span></label>
+          <input type="text" name="triggerForFindingHelp" placeholder="What they say in their own words…">
+        </div>
+        <div class="field full">
+          <label>What are you hoping to get from BlckBx?</label>
+          <div class="multi-select-wrap" data-name="coreDesire">
+            <div class="tag-area"><span class="placeholder-text">Select core desires…</span></div>
+            <div class="multi-dropdown">
+              <div class="multi-option" data-value="Financial & Subscription Audit"><span class="check-box"></span>Financial &amp; Subscription Audit</div>
+              <div class="multi-option" data-value="Help With Daily To-Do List"><span class="check-box"></span>Help With Daily To-Do List — Life Admin</div>
+              <div class="multi-option" data-value="Household Logistics"><span class="check-box"></span>Household Logistics</div>
+              <div class="multi-option" data-value="Lifestyle Optimisation"><span class="check-box"></span>Lifestyle Optimisation</div>
+              <div class="multi-option" data-value="More Time With Family"><span class="check-box"></span>More Time With Family</div>
+              <div class="multi-option" data-value="Reclaiming Free Time"><span class="check-box"></span>Reclaiming Free Time</div>
+              <div class="multi-option" data-value="Supporting Aging Parents"><span class="check-box"></span>Supporting Aging Parents</div>
+              <div class="multi-option" data-value="Travel Planning"><span class="check-box"></span>Travel Planning</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAMILY & PERSONAL -->
+    <div class="section">
+      <div class="section-label">Family &amp; Personal</div>
+      <div class="field-grid">
+        <div class="field">
+          <label>Do they have children?</label>
+          <div class="pill-group" data-name="kids">
+            <div class="pill" data-value="Yes">Yes</div>
+            <div class="pill" data-value="No">No</div>
+            <div class="pill" data-value="Pregnant">Pregnant</div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Pets?</label>
+          <div class="pill-group" data-name="pets">
+            <div class="pill" data-value="Yes">Yes</div>
+            <div class="pill" data-value="No">No</div>
+          </div>
+        </div>
+      </div>
+      <div class="kids-age-section" id="kidsAgeSection">
+        <div class="field" style="margin-bottom: 8px;">
+          <label>Age groups</label>
+          <div class="multi-select-wrap" data-name="kidsAgeGroup">
+            <div class="tag-area"><span class="placeholder-text">Select age groups…</span></div>
+            <div class="multi-dropdown">
+              <div class="multi-option" data-value="0-3yrs - Nursery"><span class="check-box"></span>0–3 yrs — Nursery</div>
+              <div class="multi-option" data-value="4-11yrs - Primary"><span class="check-box"></span>4–11 yrs — Primary</div>
+              <div class="multi-option" data-value="12-18yrs - Secondary"><span class="check-box"></span>12–18 yrs — Secondary</div>
+            </div>
+          </div>
+        </div>
+        <label style="font-size:12px;font-weight:600;color:var(--grey-500);margin-top:12px;display:block;">Children's actual ages</label>
+        <div id="childrenAges">
+          <div class="age-entry-row">
+            <div class="field">
+              <input type="text" name="childAge_0" placeholder="e.g. 4">
+            </div>
+          </div>
+        </div>
+        <button type="button" class="add-child-btn" id="addChildBtn">+ Add another child</button>
+      </div>
+      <!-- Pets detail section -->
+      <div class="kids-age-section" id="petsDetailSection">
+        <label style="font-size:12px;font-weight:600;color:var(--grey-500);display:block;margin-bottom:4px;">Pet details</label>
+        <div id="petEntries">
+          <div class="age-entry-row pet-row">
+            <div class="field" style="flex:1.2">
+              <input type="text" name="petType_0" placeholder="Type (e.g. Dog)">
+            </div>
+            <div class="field" style="flex:1.5">
+              <input type="text" name="petName_0" placeholder="Name (e.g. Bella)">
+            </div>
+          </div>
+        </div>
+        <button type="button" class="add-child-btn" id="addPetBtn">+ Add another pet</button>
+      </div>
+
+      <div class="field-grid" style="margin-top: 16px;">
+        <div class="field">
+          <label>Marital Status</label>
+          <div class="custom-select" data-name="maritalStatus">
+            <button type="button" class="select-trigger placeholder">Select…</button>
+            <div class="select-dropdown">
+              <div class="select-option" data-value="Married">Married</div>
+              <div class="select-option" data-value="In Relationship">In Relationship</div>
+              <div class="select-option" data-value="Single">Single</div>
+              <div class="select-option" data-value="Divorced">Divorced</div>
+              <div class="select-option" data-value="Widowed">Widowed</div>
+              <div class="select-option" data-value="UnKnown">Unknown</div>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Sexuality</label>
+          <div class="custom-select" data-name="sexuality">
+            <button type="button" class="select-trigger placeholder">Select…</button>
+            <div class="select-dropdown">
+              <div class="select-option" data-value="Straight">Straight</div>
+              <div class="select-option" data-value="LGBTQ">LGBTQ</div>
+              <div class="select-option" data-value="Unknown">Unknown</div>
+            </div>
+          </div>
+        </div>
+        <div class="field full conditional" id="partnerNameField">
+          <label>Partner's name</label>
+          <input type="text" name="partnerName" placeholder="e.g. James">
+        </div>
+      </div>
+    </div>
+
+    <!-- SERVICE FIT -->
+    <div class="section">
+      <div class="section-label">Service Fit</div>
+      <div class="field-grid">
+        <div class="field full">
+          <label>What would be the first task you'd give us?</label>
+          <input type="text" name="firstTask" placeholder="Their first task idea…">
+        </div>
+        <div class="field full">
+          <label>What sort of assistant do they want?</label>
+          <div class="pill-group" data-name="assistantType">
+            <div class="pill" data-value="Proactive Assistant">Proactive — chases them</div>
+            <div class="pill" data-value="Reactive Assistant">Reactive — does research, then waits</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CALL NOTES -->
+    <div class="section">
+      <div class="section-label">Call Notes</div>
+      <div class="field">
+        <label>Notes from the call</label>
+        <textarea name="callNotes" placeholder="Anything else from the conversation…" rows="5"></textarea>
+      </div>
+      <div style="margin-top: 20px;">
+        <div class="toggle-row">
+          <div class="toggle" id="convertedToggle"><div class="thumb"></div></div>
+          <span class="toggle-label">Converted into a customer</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="submit-area">
+      <button type="submit" class="btn-submit" id="submitBtn">Submit to Brevo</button>
+      <span class="submit-status" id="submitStatus"></span>
+    </div>
+  </form>
+</div>
+
+<script>
+(function() {
+  const state = { selects: {}, multiSelects: {}, pills: {}, converted: false, dealId: null };
+  const params = new URLSearchParams(window.location.search);
+  state.dealId = params.get('dealId');
+  if (state.dealId) document.getElementById('dealIdDisplay').textContent = 'Deal #' + state.dealId;
+
+  // Load deal data
+  async function loadDealData() {
+    if (!state.dealId) return;
+    const overlay = document.getElementById('loadingOverlay');
+    overlay.classList.add('visible');
+    try {
+      // TODO: Replace with your n8n fetch webhook URL
+      const response = await fetch('YOUR_N8N_FETCH_WEBHOOK_URL?dealId=' + encodeURIComponent(state.dealId));
+      if (!response.ok) throw new Error('Failed to load');
+      const data = await response.json();
+      populateForm(data);
+    } catch (err) {
+      console.log('Could not load deal data:', err.message);
+    } finally {
+      overlay.classList.remove('visible');
+    }
+  }
+
+  function populateForm(data) {
+    const form = document.getElementById('discoveryForm');
+    ['firstName','lastName','email','preferredEmail','phone','company','jobTitle','keywords','triggerForFindingHelp','firstTask'].forEach(name => {
+      if (data[name] && form.elements[name]) form.elements[name].value = data[name];
+    });
+    if (data.callNotes && form.elements.callNotes) form.elements.callNotes.value = data.callNotes;
+    ['attribution','coreLifeTrigger','maritalStatus','sexuality'].forEach(name => { if (data[name]) setSelectValue(name, data[name]); });
+    ['supportType','coreDesire','kidsAgeGroup'].forEach(name => { if (data[name] && Array.isArray(data[name])) data[name].forEach(val => addMultiValue(name, val)); });
+    ['kids','pets','assistantType'].forEach(name => { if (data[name]) setPillValue(name, data[name]); });
+    if (data.referralName) form.elements.referralName.value = data.referralName;
+    if (data.converted) { state.converted = true; document.getElementById('convertedToggle').classList.add('on'); }
+  }
+
+  // Single Selects
+  document.querySelectorAll('.custom-select').forEach(wrapper => {
+    const name = wrapper.dataset.name;
+    const trigger = wrapper.querySelector('.select-trigger');
+    const dropdown = wrapper.querySelector('.select-dropdown');
+    const options = wrapper.querySelectorAll('.select-option');
+    state.selects[name] = '';
+    trigger.addEventListener('click', (e) => { e.stopPropagation(); closeAllDropdowns(); dropdown.classList.toggle('open'); });
+    options.forEach(opt => {
+      opt.addEventListener('click', () => {
+        state.selects[name] = opt.dataset.value;
+        trigger.textContent = opt.textContent;
+        trigger.classList.remove('placeholder');
+        options.forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        dropdown.classList.remove('open');
+        if (name === 'attribution') {
+          const refField = document.getElementById('referralField');
+          refField.classList.toggle('visible', opt.dataset.value === 'Referral - Recommendation from a friend');
+        }
+        if (name === 'maritalStatus') {
+          const partnerField = document.getElementById('partnerNameField');
+          partnerField.classList.toggle('visible', opt.dataset.value === 'Married' || opt.dataset.value === 'In Relationship');
+        }
+      });
+    });
+  });
+
+  function setSelectValue(name, value) {
+    const wrapper = document.querySelector('.custom-select[data-name="' + name + '"]');
+    if (!wrapper) return;
+    const opt = wrapper.querySelector('.select-option[data-value="' + value + '"]');
+    if (opt) opt.click();
+  }
+
+  // Multi Selects
+  document.querySelectorAll('.multi-select-wrap').forEach(wrapper => {
+    const name = wrapper.dataset.name;
+    const tagArea = wrapper.querySelector('.tag-area');
+    const dropdown = wrapper.querySelector('.multi-dropdown');
+    const options = wrapper.querySelectorAll('.multi-option');
+    state.multiSelects[name] = new Set();
+    tagArea.addEventListener('click', (e) => {
+      if (e.target.closest('.remove-tag')) return;
+      e.stopPropagation(); closeAllDropdowns();
+      dropdown.classList.toggle('open');
+      tagArea.classList.toggle('active', dropdown.classList.contains('open'));
+    });
+    options.forEach(opt => {
+      opt.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const val = opt.dataset.value;
+        if (state.multiSelects[name].has(val)) { state.multiSelects[name].delete(val); opt.classList.remove('selected'); }
+        else { state.multiSelects[name].add(val); opt.classList.add('selected'); }
+        renderTags(name);
+      });
+    });
+  });
+
+  function addMultiValue(name, value) {
+    const wrapper = document.querySelector('.multi-select-wrap[data-name="' + name + '"]');
+    if (!wrapper) return;
+    const opt = wrapper.querySelector('.multi-option[data-value="' + value + '"]');
+    if (opt && !state.multiSelects[name]?.has(value)) {
+      state.multiSelects[name].add(value);
+      opt.classList.add('selected');
+      renderTags(name);
+    }
+  }
+
+  function renderTags(name) {
+    const wrapper = document.querySelector('.multi-select-wrap[data-name="' + name + '"]');
+    const tagArea = wrapper.querySelector('.tag-area');
+    const values = state.multiSelects[name];
+    tagArea.innerHTML = '';
+    if (values.size === 0) { tagArea.innerHTML = '<span class="placeholder-text">Select…</span>'; return; }
+    values.forEach(val => {
+      const tag = document.createElement('span');
+      tag.className = 'tag';
+      const shortVal = val.length > 30 ? val.substring(0, 28) + '…' : val;
+      tag.innerHTML = shortVal + '<span class="remove-tag" data-val="' + val + '">&times;</span>';
+      tag.querySelector('.remove-tag').addEventListener('click', (e) => {
+        e.stopPropagation();
+        state.multiSelects[name].delete(val);
+        const opt = wrapper.querySelector('.multi-option[data-value="' + val + '"]');
+        if (opt) opt.classList.remove('selected');
+        renderTags(name);
+      });
+      tagArea.appendChild(tag);
+    });
+  }
+
+  // Pill Groups
+  document.querySelectorAll('.pill-group').forEach(group => {
+    const name = group.dataset.name;
+    const pills = group.querySelectorAll('.pill');
+    state.pills[name] = '';
+    pills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        pills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        state.pills[name] = pill.dataset.value;
+        if (name === 'kids') {
+          document.getElementById('kidsAgeSection').classList.toggle('visible', pill.dataset.value === 'Yes' || pill.dataset.value === 'Pregnant');
+        }
+        if (name === 'pets') {
+          document.getElementById('petsDetailSection').classList.toggle('visible', pill.dataset.value === 'Yes');
+        }
+      });
+    });
+  });
+
+  function setPillValue(name, value) {
+    const group = document.querySelector('.pill-group[data-name="' + name + '"]');
+    if (!group) return;
+    const pill = group.querySelector('.pill[data-value="' + value + '"]');
+    if (pill) pill.click();
+  }
+
+  // Add child ages
+  let childCount = 1;
+  document.getElementById('addChildBtn').addEventListener('click', () => {
+    const container = document.getElementById('childrenAges');
+    const row = document.createElement('div');
+    row.className = 'age-entry-row';
+    row.innerHTML = '<div class="field"><input type="text" name="childAge_' + childCount + '" placeholder="e.g. ' + (Math.floor(Math.random()*15)+1) + '"></div><button type="button" class="btn-icon remove" onclick="this.parentElement.remove()">\u00d7</button>';
+    container.appendChild(row);
+    childCount++;
+  });
+
+  // Add pet entries
+  let petCount = 1;
+  document.getElementById('addPetBtn').addEventListener('click', () => {
+    const container = document.getElementById('petEntries');
+    const row = document.createElement('div');
+    row.className = 'age-entry-row pet-row';
+    row.innerHTML = '<div class="field" style="flex:1.2"><input type="text" name="petType_' + petCount + '" placeholder="Type (e.g. Cat)"></div><div class="field" style="flex:1.5"><input type="text" name="petName_' + petCount + '" placeholder="Name (e.g. Luna)"></div><button type="button" class="btn-icon remove" onclick="this.parentElement.remove()">\u00d7</button>';
+    container.appendChild(row);
+    petCount++;
+  });
+
+  // Toggle
+  document.getElementById('convertedToggle').addEventListener('click', function() {
+    state.converted = !state.converted;
+    this.classList.toggle('on', state.converted);
+  });
+
+  // Close all dropdowns
+  function closeAllDropdowns() {
+    document.querySelectorAll('.select-dropdown, .multi-dropdown').forEach(d => d.classList.remove('open'));
+    document.querySelectorAll('.tag-area').forEach(t => t.classList.remove('active'));
+  }
+  document.addEventListener('click', closeAllDropdowns);
+
+  // Submit
+  document.getElementById('discoveryForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const status = document.getElementById('submitStatus');
+    const btn = document.getElementById('submitBtn');
+    const childAges = [];
+    document.querySelectorAll('[name^="childAge_"]').forEach(input => { if (input.value.trim()) childAges.push(input.value.trim()); });
+
+    const pets = [];
+    document.querySelectorAll('.pet-row').forEach(row => {
+      const typeInput = row.querySelector('[name^="petType_"]');
+      const nameInput = row.querySelector('[name^="petName_"]');
+      if (typeInput && (typeInput.value.trim() || nameInput.value.trim())) {
+        pets.push({ type: typeInput.value.trim(), name: nameInput.value.trim() });
+      }
+    });
+
+    const payload = {
+      dealId: state.dealId,
+      firstName: form.firstName.value,
+      lastName: form.lastName.value,
+      email: form.email.value,
+      preferredEmail: form.preferredEmail.value,
+      phone: form.phone.value,
+      company: form.company.value,
+      jobTitle: form.jobTitle.value,
+      attribution: state.selects.attribution,
+      referralName: form.referralName?.value || '',
+      keywords: form.keywords.value,
+      supportType: [...(state.multiSelects.supportType || [])],
+      coreLifeTrigger: state.selects.coreLifeTrigger,
+      triggerForFindingHelp: form.triggerForFindingHelp.value,
+      coreDesire: [...(state.multiSelects.coreDesire || [])],
+      kids: state.pills.kids,
+      kidsAgeGroup: [...(state.multiSelects.kidsAgeGroup || [])],
+      childrenAges: childAges,
+      pets: state.pills.pets,
+      petDetails: pets,
+      partnerName: form.partnerName?.value || '',
+      maritalStatus: state.selects.maritalStatus,
+      sexuality: state.selects.sexuality,
+      firstTask: form.firstTask.value,
+      assistantType: state.pills.assistantType,
+      callNotes: form.callNotes.value,
+      converted: state.converted
+    };
+
+    btn.disabled = true;
+    status.textContent = 'Submitting…';
+    status.className = 'submit-status';
+
+    try {
+      // TODO: Replace with your n8n submit webhook URL
+      const response = await fetch('YOUR_N8N_SUBMIT_WEBHOOK_URL', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (!response.ok) throw new Error('Submit failed');
+      status.textContent = '\u2713 Saved to Brevo';
+      status.className = 'submit-status success';
+    } catch (err) {
+      status.textContent = 'Failed to save — try again';
+      status.className = 'submit-status error';
+      console.error(err);
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
+  loadDealData();
+})();
+</script>
+</body>
+</html>
