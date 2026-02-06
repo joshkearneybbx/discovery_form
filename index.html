@@ -406,6 +406,38 @@
           <input type="text" name="triggerForFindingHelp" placeholder="What they say in their own words…">
         </div>
         <div class="field full">
+          <label>Pain Points</label>
+          <div class="multi-select-wrap" data-name="painPoints">
+            <div class="tag-area"><span class="placeholder-text">Select pain points…</span></div>
+            <div class="multi-dropdown">
+              <div class="multi-option" data-value="Home Move"><span class="check-box"></span>Home Move</div>
+              <div class="multi-option" data-value="Home Renovation"><span class="check-box"></span>Home Renovation</div>
+              <div class="multi-option" data-value="Household Management"><span class="check-box"></span>Household Management</div>
+              <div class="multi-option" data-value="Property Search"><span class="check-box"></span>Property Search</div>
+              <div class="multi-option" data-value="New Baby Prep"><span class="check-box"></span>New Baby Prep</div>
+              <div class="multi-option" data-value="Childcare Logistics"><span class="check-box"></span>Childcare Logistics</div>
+              <div class="multi-option" data-value="School Search"><span class="check-box"></span>School Search</div>
+              <div class="multi-option" data-value="University Applications"><span class="check-box"></span>University Applications</div>
+              <div class="multi-option" data-value="Elder Care Coordination"><span class="check-box"></span>Elder Care Coordination</div>
+              <div class="multi-option" data-value="Care Home Research"><span class="check-box"></span>Care Home Research</div>
+              <div class="multi-option" data-value="NHS & Medical Admin"><span class="check-box"></span>NHS &amp; Medical Admin</div>
+              <div class="multi-option" data-value="Holiday Planning"><span class="check-box"></span>Holiday Planning</div>
+              <div class="multi-option" data-value="Event Planning"><span class="check-box"></span>Event Planning</div>
+              <div class="multi-option" data-value="Sabbatical Planning"><span class="check-box"></span>Sabbatical Planning</div>
+              <div class="multi-option" data-value="Wedding Planning"><span class="check-box"></span>Wedding Planning</div>
+              <div class="multi-option" data-value="Life Admin Backlog"><span class="check-box"></span>Life Admin Backlog</div>
+              <div class="multi-option" data-value="Financial Admin"><span class="check-box"></span>Financial Admin</div>
+              <div class="multi-option" data-value="Busy Work Schedule"><span class="check-box"></span>Busy Work Schedule</div>
+              <div class="multi-option" data-value="Life Optimisation"><span class="check-box"></span>Life Optimisation</div>
+              <div class="multi-option" data-value="Other"><span class="check-box"></span>Other</div>
+            </div>
+          </div>
+        </div>
+        <div class="field full conditional" id="painPointsOtherField">
+          <label>Other pain point</label>
+          <input type="text" name="painPointsOther" placeholder="Describe the pain point…">
+        </div>
+        <div class="field full">
           <label>What are you hoping to get from BlckBx?</label>
           <div class="multi-select-wrap" data-name="coreDesire">
             <div class="tag-area"><span class="placeholder-text">Select core desires…</span></div>
@@ -569,7 +601,7 @@
     overlay.classList.add('visible');
     try {
       // TODO: Replace with your n8n fetch webhook URL
-      const response = await fetch('YOUR_N8N_FETCH_WEBHOOK_URL?dealId=' + encodeURIComponent(state.dealId));
+      const response = await fetch('https://n8n.blckbx.co.uk/webhook/de572438-3ba5-46b2-a188-9fb2c7dc63a4?dealId=' + encodeURIComponent(state.dealId));
       if (!response.ok) throw new Error('Failed to load');
       const data = await response.json();
       populateForm(data);
@@ -587,7 +619,9 @@
     });
     if (data.callNotes && form.elements.callNotes) form.elements.callNotes.value = data.callNotes;
     ['attribution','coreLifeTrigger','maritalStatus','sexuality'].forEach(name => { if (data[name]) setSelectValue(name, data[name]); });
-    ['supportType','coreDesire','kidsAgeGroup'].forEach(name => { if (data[name] && Array.isArray(data[name])) data[name].forEach(val => addMultiValue(name, val)); });
+    ['supportType','coreDesire','kidsAgeGroup','painPoints'].forEach(name => { if (data[name] && Array.isArray(data[name])) data[name].forEach(val => addMultiValue(name, val)); });
+    if (data.painPointsOther) { form.elements.painPointsOther.value = data.painPointsOther; }
+    if (state.multiSelects.painPoints?.has('Other')) { document.getElementById('painPointsOtherField').classList.add('visible'); }
     ['kids','pets','assistantType'].forEach(name => { if (data[name]) setPillValue(name, data[name]); });
     if (data.referralName) form.elements.referralName.value = data.referralName;
     if (data.converted) { state.converted = true; document.getElementById('convertedToggle').classList.add('on'); }
@@ -648,6 +682,9 @@
         if (state.multiSelects[name].has(val)) { state.multiSelects[name].delete(val); opt.classList.remove('selected'); }
         else { state.multiSelects[name].add(val); opt.classList.add('selected'); }
         renderTags(name);
+        if (name === 'painPoints') {
+          document.getElementById('painPointsOtherField').classList.toggle('visible', state.multiSelects.painPoints.has('Other'));
+        }
       });
     });
   });
@@ -781,6 +818,8 @@
       coreLifeTrigger: state.selects.coreLifeTrigger,
       triggerForFindingHelp: form.triggerForFindingHelp.value,
       coreDesire: [...(state.multiSelects.coreDesire || [])],
+      painPoints: [...(state.multiSelects.painPoints || [])],
+      painPointsOther: form.painPointsOther?.value || '',
       kids: state.pills.kids,
       kidsAgeGroup: [...(state.multiSelects.kidsAgeGroup || [])],
       childrenAges: childAges,
@@ -801,7 +840,7 @@
 
     try {
       // TODO: Replace with your n8n submit webhook URL
-      const response = await fetch('YOUR_N8N_SUBMIT_WEBHOOK_URL', {
+      const response = await fetch('https://n8n.blckbx.co.uk/webhook/81344446-5779-4166-9a7e-fafebc619ee3', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
